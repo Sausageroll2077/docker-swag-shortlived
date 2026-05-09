@@ -222,7 +222,7 @@ init_diagram: |
 changelogs:
   - {date: "09.05.26:", desc: "Run certbot renew twice daily and randomize cron minute offset on startup for better ARI renewal window coverage. See [Let's Encrypt Integration Guide](https://letsencrypt.org/docs/integration-guide/)." }
   - {date: "09.05.26:", desc: "Update docs to reflect twice daily cert checks via ARI and remove outdated reference to Let's Encrypt expiration notification emails which [ended in June 2025](https://letsencrypt.org/2025/06/26/expiration-notification-service-has-ended)." }
-  - {date: "05.05.26:", desc: "Added support for Let's Encrypt cert profiles." }
+  - {date: "05.05.26:", desc: "Add support for Let's Encrypt cert profiles." }
   - {date: "23.01.26:", desc: "Reorder init to fix proxy conf version checks."}
   - {date: "21.12.25:", desc: "Add support for hetzner-cloud dns validation."}
   - {date: "04.11.25:", desc: "Switch default Gandi credentials from API Key to Token, allow DNS propagation time for Azure DNS plugin."}
