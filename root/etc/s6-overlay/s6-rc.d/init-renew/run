@@ -3,9 +3,28 @@
 
 # Check if the cert is expired or expires within a day, if so, renew
 if openssl x509 -in /config/keys/letsencrypt/fullchain.pem -noout -checkend 86400 >/dev/null; then
-    echo "The cert does not expire within the next day. Letting the cron script handle the renewal attempts overnight (2:08am)."
+    echo "The cert does not expire within the next day. Letting the cron script handle the renewal attempts."
 else
     echo "The cert is either expired or it expires within the next day. Attempting to renew. This could take up to 10 minutes."
     /app/le-renew.sh
     sleep 1
 fi
+
+# Randomize the cron minute offset on each start to spread renewal load
+CRON_MINUTE=$((RANDOM % 60))
+sed -i "s|^[0-9]\+\([[:space:]]\+\*/12.*le-renew\)|${CRON_MINUTE}\1|" /etc/crontabs/root
+
+CURRENT_EPOCH=$(date +%s)
+read -r HOUR MIN SEC <<< "$(date '+%H %M %S')"
+MIDNIGHT_EPOCH=$(( CURRENT_EPOCH - HOUR * 3600 - MIN * 60 - SEC ))
+RUN1_EPOCH=$(( MIDNIGHT_EPOCH + CRON_MINUTE * 60 ))
+RUN2_EPOCH=$(( MIDNIGHT_EPOCH + 12 * 3600 + CRON_MINUTE * 60 ))
+if [[ $CURRENT_EPOCH -lt $RUN1_EPOCH ]]; then
+    NEXT_EPOCH=$RUN1_EPOCH
+elif [[ $CURRENT_EPOCH -lt $RUN2_EPOCH ]]; then
+    NEXT_EPOCH=$RUN2_EPOCH
+else
+    NEXT_EPOCH=$(( MIDNIGHT_EPOCH + 86400 + CRON_MINUTE * 60 ))
+fi
+NEXT_RUN=$(date -d "@${NEXT_EPOCH}" "+%H:%M")
+echo "Renewal cron scheduled at minute ${CRON_MINUTE}, twice daily. Next check at ${NEXT_RUN}."
