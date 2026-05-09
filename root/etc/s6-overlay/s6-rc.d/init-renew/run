@@ -12,5 +12,5 @@ fi
 
 # Randomize the cron minute offset on each start to spread renewal load
 CRON_MINUTE=$((RANDOM % 60))
-sed -i "s|^[0-9]\+\([[:space:]]\+\*/6.*le-renew\)|${CRON_MINUTE}\1|" /etc/crontabs/root
-echo "Renewal cron scheduled at minute ${CRON_MINUTE} of every 6th hour"
+sed -i "s|^[0-9]\+\([[:space:]]\+\*/12.*le-renew\)|${CRON_MINUTE}\1|" /etc/crontabs/root
+echo "Renewal cron scheduled at minute ${CRON_MINUTE}, twice daily"

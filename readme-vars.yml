@@ -66,7 +66,7 @@ app_setup_block: |
       2. Certs that cover sub-subdomains of your main subdomain (ie. `*.yoursubdomain.duckdns.org`, set the `SUBDOMAINS` variable to `wildcard`)
   * `--cap-add=NET_ADMIN` is required for fail2ban to modify iptables
   * After setup, navigate to `https://example.com` to access the default homepage (http access through port 80 is disabled by default, you can enable it by editing the default site config at `/config/nginx/site-confs/default.conf`).
-  * Certs are checked nightly and if expiration is within 30 days, renewal is attempted. If your cert is about to expire in less than 30 days, check the logs under `/config/log/letsencrypt` to see why the renewals have been failing. It is recommended to input your e-mail in docker parameters so you receive expiration notices from Let's Encrypt in those circumstances.
+  * Certs are checked twice daily using ACME Renewal Information (ARI) to determine the optimal renewal window. If your cert is about to expire, check the logs under `/config/log/letsencrypt` to see why the renewals have been failing.
 
   ### Certbot Plugins
 
@@ -220,6 +220,8 @@ init_diagram: |
   "swag:latest" <- Base Images
 # changelog
 changelogs:
+  - {date: "09.05.26:", desc: "Run certbot renew twice daily and randomize cron minute offset on startup for better ARI renewal window coverage. See [Let's Encrypt Integration Guide](https://letsencrypt.org/docs/integration-guide/)." }
+  - {date: "09.05.26:", desc: "Update docs to reflect twice daily cert checks via ARI and remove outdated reference to Let's Encrypt expiration notification emails which [ended in June 2025](https://letsencrypt.org/2025/06/26/expiration-notification-service-has-ended)." }
   - {date: "05.05.26:", desc: "Added support for Let's Encrypt cert profiles." }
   - {date: "23.01.26:", desc: "Reorder init to fix proxy conf version checks."}
   - {date: "21.12.25:", desc: "Add support for hetzner-cloud dns validation."}
