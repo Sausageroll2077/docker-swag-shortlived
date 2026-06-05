@@ -220,6 +220,7 @@ init_diagram: |
   "swag:latest" <- Base Images
 # changelog
 changelogs:
+  - {date: "01.06.26:", desc: "Remove obsolete old cert check logic."}
   - {date: "09.05.26:", desc: "Run certbot renew twice daily and randomize cron minute offset on startup for better ARI renewal window coverage. See [Let's Encrypt Integration Guide](https://letsencrypt.org/docs/integration-guide/)." }
   - {date: "09.05.26:", desc: "Update docs to reflect twice daily cert checks via ARI and remove outdated reference to Let's Encrypt expiration notification emails which [ended in June 2025](https://letsencrypt.org/2025/06/26/expiration-notification-service-has-ended)." }
   - {date: "05.05.26:", desc: "Add support for Let's Encrypt cert profiles." }
